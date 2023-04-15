@@ -1,6 +1,12 @@
 import numpy as np
 import cv2
 
+from gpiozero import Servo
+from gpiozero.pins.pigpio import PiGPIOFactory
+
+factory = PiGPIOFactory()
+servo = Servo(12, min_pulse_width=0.5/1000, max_pulse_width=2.5/1000, pin_factory=factory)
+
 face_cascade = cv2.CascadeClassifier('cascades/data/haarcascade_frontalface_alt2.xml')
 
 cap = cv2.VideoCapture(0)
@@ -36,10 +42,11 @@ while True:
             cv2.rectangle(frame, (x, y), (width, height), (0,255,0), 5)
             cv2.line(frame, (0,rec_h), (rec_w*2,rec_h), (0,255,0), 5)
 
-        #if (rec_w < 305):
-        #  
-        #if (rec_w > 335):
-        #
+        if (rec_w < 305):
+            servo.value -= 3
+        
+        if (rec_w > 335):
+            servo.value += 3
 
         #if (rec_w <= 335) and (rec_w >= 305) and (rec_h <= 255) and (rec_h >= 225): #for both x and y
         #    cv2.rectangle(frame, (x, y), (width, height), (0,255,0), 5)
